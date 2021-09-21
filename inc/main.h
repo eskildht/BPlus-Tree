@@ -10,6 +10,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <tuple>
 #include <stack>
 #include <algorithm>
 
@@ -105,5 +106,8 @@ class BPlusTree
 #endif
 };
 
-
-#endif
+class IOUtils
+{
+	public:
+		static vector<tuple<float, string>*> kv_tuples(string input_filename);
+}
