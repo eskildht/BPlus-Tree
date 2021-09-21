@@ -3,7 +3,7 @@
 
 
 // uncomment for debug mode
-#define DEBUG 
+#define DEBUG
 
 
 #include <iostream>
@@ -37,7 +37,7 @@ class Node
 		virtual void Insert(float key, Node* rightChild){}
 		virtual void Insert(float key, Node* leftChild, Node* rightChild){}
 		virtual void Search(float key){}
-		virtual void Search(float key1, float key2){}
+		virtual void Search(float key1, float key2){};
 		virtual Node* Split(float* keyToParent){}
 		virtual vector<Node*> Get_Children(){}
 		virtual vector< vector <string> > Get_Values(){}
@@ -81,7 +81,7 @@ class LeafNode : public Node
 class BPlusTree
 {
 	private:
-		int order;	
+		int order;
 		Node* root;
 		ofstream outputFile;
 		void Search_Path(Node* node, float key, stack<Node*>* path);
