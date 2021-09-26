@@ -3,7 +3,7 @@
 
 
 // uncomment for debug mode
-#define DEBUG
+// #define DEBUG
 
 
 #include <iostream>
@@ -34,15 +34,15 @@ class Node
 	public:
 		bool Get_IsLeaf();
 		vector<float> Get_Keys();
-		virtual void Insert(float key, string value){}
-		virtual void Insert(float key, Node* rightChild){}
-		virtual void Insert(float key, Node* leftChild, Node* rightChild){}
-		virtual void Search(float key){}
+		virtual void Insert(float key, string value){};
+		virtual void Insert(float key, Node* rightChild){};
+		virtual void Insert(float key, Node* leftChild, Node* rightChild){};
+		virtual void Search(float key){};
 		virtual void Search(float key1, float key2){};
-		virtual Node* Split(float* keyToParent){}
-		virtual vector<Node*> Get_Children(){}
-		virtual vector< vector <string> > Get_Values(){}
-		virtual Node* Get_Next(){}
+		virtual Node* Split(float* keyToParent){};
+		virtual vector<Node*> Get_Children(){};
+		virtual vector< vector <string> > Get_Values(){};
+		virtual Node* Get_Next(){};
 };
 
 
@@ -110,4 +110,6 @@ class IOUtils
 {
 	public:
 		static vector<tuple<float, string>*> kv_tuples(string input_filename);
-}
+};
+
+#endif

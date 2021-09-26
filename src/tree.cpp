@@ -8,21 +8,21 @@ using namespace std;
 void BPlusTree :: Search_Path(Node* node, float key, stack<Node*>* path)
 {
 	// push node to stack
-        path->push(node);
+	path->push(node);
 
 	// check if the node pushed to stack is an internal node
 	if(!node->Get_IsLeaf())
-        {
+	{
 		// search for the given key in the current node
 		vector<float> keys = node->Get_Keys();
 		vector<Node*> children = node->Get_Children();
-                vector<float>::iterator index = lower_bound(keys.begin(), keys.end(), key);
+		vector<float>::iterator index = lower_bound(keys.begin(), keys.end(), key);
 
 		// check if key is found
 		if(key == keys[index - keys.begin()])
 		{
 			// recursively repeat by searching the path through the corresponding right child index
-                	Search_Path(children[(index - keys.begin()) + 1], key, path);
+			Search_Path(children[(index - keys.begin()) + 1], key, path);
 		}
 
 		// if key is not found
@@ -31,7 +31,7 @@ void BPlusTree :: Search_Path(Node* node, float key, stack<Node*>* path)
 			// recursively repeat by searching the path through the corresponding left child index
 			Search_Path(children[index - keys.begin()], key, path);
 		}
-        }
+	}
 }
 
 
@@ -41,11 +41,11 @@ void BPlusTree :: Destroy(Node* node)
 	// recursively repeat the function to delete all the nodes level by level, starting with the leaf nodes
 	if (!node->Get_IsLeaf())
 	{
-  	        vector<Node*> children = node->Get_Children();
-                for(vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
-                {
-                        Destroy(*index);
-        	}
+		vector<Node*> children = node->Get_Children();
+		for(vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
+		{
+			Destroy(*index);
+		}
 	}
 	delete(node);
 }
@@ -56,54 +56,54 @@ void BPlusTree :: Destroy(Node* node)
 void BPlusTree :: Reveal_Tree(Node* node)
 {
 	// check if tree is empty
-        if (NULL == node)
-        {
-                cout<<endl<<"Root Node: Null";
-                return;
-        }
+	if (NULL == node)
+	{
+		cout<<endl<<"Root Node: Null";
+		return;
+	}
 
 	// check if current node is a leaf node
-        if(node->Get_IsLeaf())
-        {
-                cout<<endl<<"Leaf Node: ";
-        }
+	if(node->Get_IsLeaf())
+	{
+		cout<<endl<<"Leaf Node: ";
+	}
 
 	// if current node is a internal node
-        else
-        {
-                cout<<endl<<"Internal Node: ";
-        }
+	else
+	{
+		cout<<endl<<"Internal Node: ";
+	}
 
 	// display the keys
-        vector<float> keys = node->Get_Keys();
-        for(vector<float>::iterator index = keys.begin(); index != keys.end(); index++)
-        {
-                cout<<*index<<" ";
-        }
-        cout<<endl;
+	vector<float> keys = node->Get_Keys();
+	for(vector<float>::iterator index = keys.begin(); index != keys.end(); index++)
+	{
+		cout<<*index<<" ";
+	}
+	cout<<endl;
 
 	// check if internal node to continue revelation of the next level
-        if (!node->Get_IsLeaf())
-        {
+	if (!node->Get_IsLeaf())
+	{
 		// display the keys in the children of the current internal node
-                vector<Node*> children = node->Get_Children();
-                cout<<"children"<<endl<<"--------"<<endl;
-                for(vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
-                {
-                        vector<float> childKeys = (*index)->Get_Keys();
-                        for(vector<float>::iterator i = childKeys.begin(); i != childKeys.end(); i++)
-                        {
-                                cout<<*i<<" ";
-                        }
-                        cout<<endl;
-                }
+		vector<Node*> children = node->Get_Children();
+		cout<<"children"<<endl<<"--------"<<endl;
+		for(vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
+		{
+			vector<float> childKeys = (*index)->Get_Keys();
+			for(vector<float>::iterator i = childKeys.begin(); i != childKeys.end(); i++)
+			{
+				cout<<*i<<" ";
+			}
+			cout<<endl;
+		}
 
 		// recursively repeat revelation of the next level
-                for(vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
-                {
-                        Reveal_Tree(*index);
-                }
-        }
+		for(vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
+		{
+			Reveal_Tree(*index);
+		}
+	}
 }
 #endif
 
@@ -122,7 +122,7 @@ void BPlusTree :: Insert(float key, string value)
 	// check if tree is empty
 	if(NULL == root)
 	{
-		// Irrespective of the order, root is always a leaf node for 
+		// Irrespective of the order, root is always a leaf node for
 		// the first insertion. So, create a new leaf node.
 		root = new LeafNode;
 		root->Insert(key, value);
@@ -135,7 +135,7 @@ void BPlusTree :: Insert(float key, string value)
 		Node* rightNode = NULL;
 		float* keyToParent = new float;
 		bool rootPopped = false;
-		
+
 		// obtain the search path from the root to leaf node and push it on to a stack
 		stack<Node*>* path = new stack<Node*>;
 		Search_Path(root, key, path);
@@ -147,7 +147,7 @@ void BPlusTree :: Insert(float key, string value)
 		// this as long as there is an imbalance in the tree, moving up the stack every iteration.
 		while(path->top()->Get_Keys().size() == order)
 		{
-			// Update the current node as the left half and return the right half. Also 
+			// Update the current node as the left half and return the right half. Also
 			// obtain the middle element, which is the key to be moved up to the parent.
 			leftNode = path->top();
 			rightNode = leftNode->Split(keyToParent);
@@ -156,7 +156,7 @@ void BPlusTree :: Insert(float key, string value)
 			path->pop();
 			if(!path->empty())
 			{
-				// Insert the middle key and the right half in to 
+				// Insert the middle key and the right half in to
 				// the parent. The parent will be an internal node.
 				path->top()->Insert(*keyToParent, rightNode);
 			}
@@ -201,15 +201,15 @@ void BPlusTree :: Search(float key)
 	// if it is a vaild search
 	else
 	{
-		int i = 0;	
-		
+		int i = 0;
+
 		// obtain the search path from root to leaf node and push it on to a stack
 		stack<Node*>* path = new stack<Node*>;
 		Search_Path(root, key, path);
-		
+
 		// search for the key in the leaf node, which is at the top of the stack
 		vector<float> keys = path->top()->Get_Keys();
-		vector< vector <string> > values = path->top()->Get_Values(); 
+		vector< vector <string> > values = path->top()->Get_Values();
 		vector<float>::iterator index = lower_bound(keys.begin(), keys.end(), key);
 
 		// check if key is found
@@ -249,14 +249,14 @@ void BPlusTree :: Search(float key1, float key2)
 		int i = 0;
 		bool firstPass = true;
 		float firstKey = ERROR;
-		
+
 		// obtain the search path from root to leaf node and push it on to a stack
 		stack<Node*>* path = new stack<Node*>;
 		Search_Path(root, key1, path);
-		
+
 		// search for the key in the leaf node, which is at the top of the stack
 		vector<float> keys = path->top()->Get_Keys();
-		vector< vector <string> > values = path->top()->Get_Values(); 
+		vector< vector <string> > values = path->top()->Get_Values();
 		Node* next = path->top()->Get_Next();
 		vector<float>::iterator index = lower_bound(keys.begin(), keys.end(), key1);
 
@@ -266,17 +266,17 @@ void BPlusTree :: Search(float key1, float key2)
 			// check if end of the current leaf node is reached
 			if((index - keys.begin()) == keys.size())
 			{
- 				// go to the next leaf node
+				// go to the next leaf node
 				keys = next->Get_Keys();
-                		values = next->Get_Values();
-                		next = next->Get_Next();
+				values = next->Get_Values();
+				next = next->Get_Next();
 				index = keys.begin();
-			}	
-			
+			}
+
 			// save the smallest key in the given search range
 			if(firstPass)
-			{	
-				firstKey = keys[index - keys.begin()];						
+			{
+				firstKey = keys[index - keys.begin()];
 			}
 
 
@@ -288,7 +288,7 @@ void BPlusTree :: Search(float key1, float key2)
 			}
 
 			// check if key is within the search range
-			if((key1 <= keys[index - keys.begin()]) && (keys[index - keys.begin()] <= key2)) 
+			if((key1 <= keys[index - keys.begin()]) && (keys[index - keys.begin()] <= key2))
 			{
 				if(!firstPass)
 				{
