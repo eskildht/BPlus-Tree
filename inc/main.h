@@ -106,20 +106,17 @@ class BPlusTree
 #endif
 };
 
-class ParallelBPlusTree 
+class ParallelBPlusTree
 {
 	private:
 		int num_trees;
 		int trees_order;
 		vector<BPlusTree*> trees;
+		void insert(vector<tuple<float, string>>* inserts, BPlusTree* tree);
 	public:
-		ParallelBPlusTree(int num_trees = 0, int trees_order);
+		ParallelBPlusTree(int trees_order, int num_trees = 0);
 		~ParallelBPlusTree();
 		void build(string input_file);
-
-
-
 }
-
 
 #endif
