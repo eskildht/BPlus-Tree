@@ -3,12 +3,13 @@
 #include <iostream>
 #include <string>
 
+// Constructor
 ParallelBPlusTree :: ParallelBPlusTree(int trees_order, int num_trees) : trees_order(trees_order) {
 	// Set the number of trees/threads to use
 	int conc = std::thread::hardware_concurrency();
 	if (num_trees > 0 && num_trees != conc) {
 		std::cout << "Chosen num_trees=" << num_trees << " differs from reported hardware_concurrency=" << conc << "\n";
-		this->num_trees = num_trees;	
+		this->num_trees = num_trees;
 	}
 	else {
 		this->num_trees = conc;
@@ -20,6 +21,13 @@ ParallelBPlusTree :: ParallelBPlusTree(int trees_order, int num_trees) : trees_o
 		tree.Initialize(trees_order);
 		BPlusTree* bptreepointer = &tree;
 		trees.push_back(bptreepointer);
+	}
+}
+
+// Destructor
+ParallelBPlusTree :: ~ParallelBPlusTree() {
+	for (int i; i < num_trees; i++)	{
+		trees[i]->~BPlusTree();
 	}
 }
 
@@ -37,7 +45,7 @@ void ParallelBPlusTree :: build(string input_file) {
 	float key = ERROR;
 	string line, value;
 	vector<tuple<float, string>> inserts;
-	
+
 	// Get all inserts from file
 	while (getline(file, line)) {
 		if(0 == line.compare(0, 6, "Insert"))
@@ -64,7 +72,7 @@ void ParallelBPlusTree :: build(string input_file) {
 	auto t1 = chrono::high_resolution_clock::now();
 	// Start threads
 	for (int i = 0; i < num_trees; i++) {
-		std::thread th (&ParallelBPlusTree::insert, insert_parts[i], trees[i]);
+		std::thread th (&ParallelBPlusTree::insert, this, insert_parts[i], trees[i]);
 		threads.push_back(&th);
 	}
 	// Synchronize all threads
