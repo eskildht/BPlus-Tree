@@ -3,9 +3,9 @@
 #include <chrono>
 
 // insert function for vector of key-value pairs
-void insert(vector<tuple<float, string>>& inserts, BPlusTree& tree) {
-	for(auto insert : inserts) {
-		tree.Insert(get<0>(insert), get<1>(insert));
+void insert(vector<tuple<float, string>>* inserts, BPlusTree* tree) {
+	for(auto insert : *inserts) {
+		tree->Insert(get<0>(insert), get<1>(insert));
 	}
 }
 
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 	}
 	
 	auto t1 = chrono::high_resolution_clock::now();
-	insert(inserts, tree);
+	insert(&inserts, &tree);
 	auto t2 = chrono::high_resolution_clock::now();
 	chrono::duration<double, std::milli> ms_double = t2 - t1;
 
