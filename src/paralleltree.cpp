@@ -14,12 +14,10 @@ ParallelBPlusTree :: ParallelBPlusTree(int trees_order, int num_trees) : trees_o
 	else {
 		this->num_trees = conc;
 	}
-
 	// Instantiate the trees
 	for (int i = 0; i < this->num_trees; i++) {
-		BPlusTree tree;
-		tree.Initialize(trees_order);
-		BPlusTree* bptreepointer = &tree;
+		BPlusTree* bptreepointer = new BPlusTree;
+		bptreepointer->Initialize(trees_order);
 		trees.push_back(bptreepointer);
 	}
 }
@@ -73,15 +71,15 @@ void ParallelBPlusTree :: build(string input_file) {
 	// Start threads
 	for (int i = 0; i < num_trees; i++) {
 		std::thread th (&ParallelBPlusTree::insert, this, insert_parts[i], trees[i]);
-		threads.push_back(&th);
+		threads.push_back(std::move(th));
 	}
 	// Synchronize all threads
 	for (int i = 0; i < num_trees; i++) {
-		threads[i]->join();
+		threads[i].join();
 	}
 	auto t2 = chrono::high_resolution_clock::now();
 	chrono::duration<double, std::milli> ms_double = t2 - t1;
-	std::cout << "Build took: " << ms_double.count() << "ms\n";
+	std::cout << "Build took: " << ms_double.count() << "ms" << std::endl;
 }
 
 
