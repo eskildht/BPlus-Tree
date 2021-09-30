@@ -14,6 +14,7 @@ SRC_SINGLE = src/single-main.cpp \
 
 
 SRC_PARALLEL = src/parallel-main.cpp \
+	src/paralleltree.cpp \
 	src/tree.cpp \
 	src/node.cpp \
 	src/internalnode.cpp \
