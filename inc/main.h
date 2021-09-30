@@ -106,10 +106,20 @@ class BPlusTree
 #endif
 };
 
-class IOUtils
+class ParallelBPlusTree 
 {
+	private:
+		int num_trees;
+		int trees_order;
+		vector<BPlusTree*> trees;
 	public:
-		static vector<tuple<float, string>*> kv_tuples(string input_filename);
-};
+		ParallelBPlusTree(int num_trees = 0, int trees_order);
+		~ParallelBPlusTree();
+		void build(string input_file);
+
+
+
+}
+
 
 #endif
