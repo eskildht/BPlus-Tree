@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 	vector<tuple<float, string>> inserts;
 	BPlusTree tree;
 
-	ifstream file("input_file_single.txt");
+	ifstream file("input_file.txt");
 
 	tree.Initialize(3);
 
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 			inserts.push_back(make_tuple(key, value));
 		}
 	}
-	
+
 	auto t1 = chrono::high_resolution_clock::now();
 	insert(&inserts, &tree);
 	auto t2 = chrono::high_resolution_clock::now();
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
 #ifdef DEBUG
 	// print the current state of the B+ tree
-	tree.Print_Tree();
+	// tree.Print_Tree();
 #endif
 
 	cout << ms_double.count() << "ms\n";
