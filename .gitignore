@@ -1,3 +1,4 @@
 .ccls-cache
 *.swp
 *.out.*
+*.out
