@@ -25,7 +25,7 @@ ParallelBPlusTree :: ParallelBPlusTree(int trees_order, int num_trees) : trees_o
 // Destructor
 ParallelBPlusTree :: ~ParallelBPlusTree() {
 	for (int i; i < num_trees; i++)	{
-		trees[i]->~BPlusTree();
+		delete(trees[i]);
 	}
 }
 
@@ -59,18 +59,25 @@ void ParallelBPlusTree :: build(string input_file) {
 
 	// Split inserts into number of trees/threads vectors
 	size_t const size = inserts.size() / num_trees;
-	vector<vector<tuple<float, string>>*> insert_parts;
-	for (int i = 1; i < num_trees; i++) {
-		vector<tuple<float, string>> insert_part(inserts.begin(), inserts.begin() + i*size);
-		insert_parts.push_back(&insert_part);
+	vector<vector<tuple<float, string>>> insert_parts;
+	for (int i = 0; i < (num_trees-1); i++) {
+		vector<tuple<float, string>> insert_part(inserts.begin() + i*size, inserts.begin() + (i+1)*size);
+		insert_parts.push_back(insert_part);
 	}
 	vector<tuple<float, string>> insert_part_last(inserts.begin() + (num_trees-1)*size, inserts.end());
-	insert_parts.push_back(&insert_part_last);
+	insert_parts.push_back(insert_part_last);
+	// Print all vectors about to insert
+	//	for (auto part : insert_parts) {
+	//		for (auto tup : part) {
+	//			std::cout << "(" << get<0>(tup) << ", " << get<1>(tup) << ") ";
+	//		}
+	//		std::cout << "\n\n";
+	//	}
 
 	auto t1 = chrono::high_resolution_clock::now();
 	// Start threads
 	for (int i = 0; i < num_trees; i++) {
-		std::thread th (&ParallelBPlusTree::insert, this, insert_parts[i], trees[i]);
+		std::thread th (&ParallelBPlusTree::insert, this, &insert_parts[i], trees[i]);
 		threads.push_back(std::move(th));
 	}
 	// Synchronize all threads
@@ -80,6 +87,12 @@ void ParallelBPlusTree :: build(string input_file) {
 	auto t2 = chrono::high_resolution_clock::now();
 	chrono::duration<double, std::milli> ms_double = t2 - t1;
 	std::cout << "Build took: " << ms_double.count() << "ms" << std::endl;
+
+	// Print all trees
+	//	for (int i = 0; i < num_trees; i++) {
+	//		std::cout << "Tree " << i << std::endl;
+	//		trees[i]->Print_Tree();
+	//	}
 }
 
 
