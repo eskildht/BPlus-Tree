@@ -12,9 +12,7 @@ void insert(vector<tuple<float, string>>* inserts, BPlusTree* tree) {
 // main function
 int main(int argc, char* argv[])
 {
-	BPlusTree tree;
-	tree.Initialize(3);
-
+	BPlusTree tree(3);
 	auto t1 = chrono::high_resolution_clock::now();
 	tree.build("input_file.txt");
 	auto t2 = chrono::high_resolution_clock::now();

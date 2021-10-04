@@ -12,7 +12,9 @@
 #include <vector>
 #include <tuple>
 #include <stack>
+#include <thread>
 #include <algorithm>
+#include "bloom_filter.hpp"
 
 
 #define ERROR -1
@@ -87,12 +89,14 @@ class BPlusTree
 		ofstream outputFile;
 		void Search_Path(Node* node, float key, stack<Node*>* path);
 		void Destroy(Node* node);
+		bloom_filter filter;
 
 #ifdef DEBUG
 		void Reveal_Tree(Node* node);
 #endif
 
 	public:
+		BPlusTree(int order);
 		void Initialize(int m);
 		void Insert(float key, string value);
 		void Search(float key);
@@ -100,6 +104,8 @@ class BPlusTree
 		void build(string input_file);
 		void Open_Output_File();
 		void Close_Output_File();
+		void filter_insert(float key);
+		void filter_query(float key);
 		~BPlusTree();
 
 #ifdef DEBUG
