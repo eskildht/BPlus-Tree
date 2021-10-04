@@ -107,11 +107,8 @@ void BPlusTree :: Reveal_Tree(Node* node)
 }
 #endif
 
-
-// operation: Initialize(m)
-void BPlusTree :: Initialize(int m)
-{
-	order = m;
+//  Constructor
+BPlusTree :: BPlusTree(int order) : order(order) {
 	root = NULL;
 }
 
