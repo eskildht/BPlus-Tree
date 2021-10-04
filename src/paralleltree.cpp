@@ -74,7 +74,6 @@ void ParallelBPlusTree :: build(string input_file) {
 	//		std::cout << "\n\n";
 	//	}
 
-	auto t1 = chrono::high_resolution_clock::now();
 	// Start threads
 	for (int i = 0; i < num_trees; i++) {
 		std::thread th (&ParallelBPlusTree::insert, this, &insert_parts[i], trees[i]);
@@ -84,9 +83,6 @@ void ParallelBPlusTree :: build(string input_file) {
 	for (int i = 0; i < num_trees; i++) {
 		threads[i].join();
 	}
-	auto t2 = chrono::high_resolution_clock::now();
-	chrono::duration<double, std::milli> ms_double = t2 - t1;
-	std::cout << "Build took: " << ms_double.count() << "ms" << std::endl;
 
 	// Print all trees
 	//	for (int i = 0; i < num_trees; i++) {

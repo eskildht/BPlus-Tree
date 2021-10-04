@@ -330,6 +330,31 @@ void BPlusTree :: Search(float key1, float key2)
 	}
 }
 
+void BPlusTree :: build(string input_file) {
+	std::ifstream file(input_file);
+	int pos = ERROR;
+	float key = ERROR;
+	string line, value;
+	vector<tuple<float, string>> inserts;
+
+	// Get all inserts from file
+	while (getline(file, line)) {
+		if(0 == line.compare(0, 6, "Insert"))
+		{
+			pos = line.find(",");
+			key = atof(line.substr(7, pos - 7).c_str());
+			value = line.substr(pos + 1, line.size() - pos - 2);
+
+			// add (key, value) to in-memory vector
+			inserts.push_back(make_tuple(key, value));
+		}
+	}
+
+	for (auto const& insert : inserts) {
+		Insert(get<0>(insert), get<1>(insert));
+	}
+}
+
 
 // function to open the output file
 void BPlusTree :: Open_Output_File()
