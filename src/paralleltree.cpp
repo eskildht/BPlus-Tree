@@ -1,7 +1,4 @@
 #include "main.h"
-#include <thread>
-#include <iostream>
-#include <string>
 
 // Constructor
 ParallelBPlusTree :: ParallelBPlusTree(int trees_order, int num_trees) : trees_order(trees_order) {
