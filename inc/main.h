@@ -89,7 +89,6 @@ class BPlusTree
 		ofstream outputFile;
 		void Search_Path(Node* node, float key, stack<Node*>* path);
 		void Destroy(Node* node);
-		bloom_filter filter;
 
 #ifdef DEBUG
 		void Reveal_Tree(Node* node);
@@ -104,8 +103,6 @@ class BPlusTree
 		void build(string input_file);
 		void Open_Output_File();
 		void Close_Output_File();
-		void filter_insert(float key);
-		void filter_query(float key);
 		~BPlusTree();
 
 #ifdef DEBUG
@@ -120,6 +117,7 @@ class ParallelBPlusTree
 		int trees_order;
 		vector<thread> threads;
 		vector<BPlusTree*> trees;
+		vector<bloom_filter> filters;
 		void insert(vector<tuple<float, string>>* inserts, BPlusTree* tree);
 	public:
 		ParallelBPlusTree(int trees_order, int num_trees = 0);
