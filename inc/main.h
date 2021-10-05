@@ -98,7 +98,7 @@ class BPlusTree
 		BPlusTree(int order);
 		void Initialize(int m);
 		void Insert(float key, string value);
-		void Search(float key);
+		vector<string>* Search(float key);
 		void Search(float key1, float key2);
 		void build(string input_file);
 		void Open_Output_File();
@@ -117,12 +117,16 @@ class ParallelBPlusTree
 		int trees_order;
 		vector<thread> threads;
 		vector<BPlusTree*> trees;
-		vector<bloom_filter> filters;
-		void insert(vector<tuple<float, string>>* inserts, BPlusTree* tree);
+		vector<bloom_filter*> filters;
+		void thread_insert(vector<tuple<float, string>>* inserts, BPlusTree* tree, bloom_filter* filter);
+		void thread_search(BPlusTree* tree, float key);
+		void sync_threads();
 	public:
-		ParallelBPlusTree(int trees_order, int num_trees = 0);
+		ParallelBPlusTree(int trees_order, int num_trees = 0, int projected_element_count = 10000);
 		~ParallelBPlusTree();
 		void build(string input_file);
+		void search(float key);
+		void search(float key1, float key2);
 };
 
 #endif

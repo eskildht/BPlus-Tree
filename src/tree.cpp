@@ -187,12 +187,13 @@ void BPlusTree :: Insert(float key, string value)
 
 
 // operation: Search(key)
-void BPlusTree :: Search(float key)
+vector<string>* BPlusTree :: Search(float key)
 {
+	vector<string>* result = new vector<string>;
 	// check if tree is empty
 	if(NULL == root)
 	{
-		outputFile<<"Null"<<endl;
+		result->push_back("Null");
 	}
 
 	// if it is a vaild search
@@ -215,19 +216,20 @@ void BPlusTree :: Search(float key)
 			// display the values
 			for(i = 0; i < values[index - keys.begin()].size() - 1; i++)
 			{
-				outputFile<<values[index - keys.begin()][i]<<",";
+				result->push_back(values[index - keys.begin()][i]);
 			}
-			outputFile<<values[index - keys.begin()][i]<<endl;
+			result->push_back(values[index - keys.begin()][i]);
 		}
 
 		// if key is not found
 		else
 		{
-			outputFile<<"Null"<<endl;
+			result->push_back("Null");
 		}
 
 		delete(path);
 	}
+	return result;
 }
 
 
