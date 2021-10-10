@@ -15,5 +15,9 @@ int main() {
 	t2 = chrono::high_resolution_clock::now();
 	ms_double = t2 - t1;
 	std::cout << "Search for key=" << key << " took: " << ms_double.count() << "ms" << std::endl;
+	ptree.insert(72.12, "Value19191919");
+	ptree.search(72.12);
+	ptree.insert(72.12, "Value2001231", false);
+	ptree.search(72.12);
 }
 

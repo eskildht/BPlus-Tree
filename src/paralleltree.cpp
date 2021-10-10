@@ -25,6 +25,11 @@ ParallelBPlusTree :: ParallelBPlusTree(int trees_order, int num_trees, int proje
 		bloom_filter* filterpointer = new bloom_filter(parameters);
 		filters.push_back(filterpointer);
 	}
+
+	// Instantiate rng and uniform int distribution
+	std::random_device rd;
+	this->rng = std::mt19937(rd());
+	this->uni = std::uniform_int_distribution<int>(0, this->num_trees-1);
 }
 
 // Destructor
@@ -75,13 +80,13 @@ void ParallelBPlusTree :: build(string input_file) {
 	}
 	vector<tuple<float, string>> insert_part_last(inserts.begin() + (num_trees-1)*size, inserts.end());
 	insert_parts.push_back(insert_part_last);
-// Print all vectors about to insert
-//	for (auto part : insert_parts) {
-//		for (auto tup : part) {
-//			std::cout << "(" << get<0>(tup) << ", " << get<1>(tup) << ") ";
-//		}
-//		std::cout << "\n\n";
-//	}
+	// Print all vectors about to insert
+	//	for (auto part : insert_parts) {
+	//		for (auto tup : part) {
+	//			std::cout << "(" << get<0>(tup) << ", " << get<1>(tup) << ") ";
+	//		}
+	//		std::cout << "\n\n";
+	//	}
 
 	// Start threads
 	for (int i = 0; i < num_trees; i++) {
@@ -123,6 +128,22 @@ void ParallelBPlusTree :: thread_search(BPlusTree* tree, float key) {
 		std::cout << val << ", ";
 	}
 #endif
+}
+
+void ParallelBPlusTree :: insert(float key, string value, bool preserve_locality) {
+	// Insert a single key, value pair into the index structure
+	// Optionally preserve_locality
+	if (preserve_locality) {
+		for (int i = 0; i < num_trees; i++) {
+			if (filters[i]->contains(std::to_string(key))) {
+				trees[i]->Insert(key,value);
+				return;
+			}
+		}
+	}
+	int rand_int = uni(rng);
+	filters[rand_int]->insert(std::to_string(key));
+	trees[rand_int]->Insert(key, value);
 }
 
 void ParallelBPlusTree :: sync_threads() {

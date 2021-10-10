@@ -14,6 +14,7 @@
 #include <stack>
 #include <thread>
 #include <algorithm>
+#include <random>
 #include "bloom_filter.hpp"
 
 
@@ -115,6 +116,8 @@ class ParallelBPlusTree
 	private:
 		int num_trees;
 		int trees_order;
+		std::mt19937 rng;
+		std::uniform_int_distribution<int> uni;
 		vector<thread> threads;
 		vector<BPlusTree*> trees;
 		vector<bloom_filter*> filters;
@@ -127,6 +130,7 @@ class ParallelBPlusTree
 		void build(string input_file);
 		void search(float key);
 		void search(float key1, float key2);
+		void insert(float key, string value, bool preserve_locality=true);
 };
 
 #endif
