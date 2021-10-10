@@ -87,6 +87,9 @@ class BPlusTree
 	private:
 		int order;
 		Node* root;
+		float max_insert;
+		float min_insert;
+		bool first_insert;
 		ofstream outputFile;
 		void Search_Path(Node* node, float key, stack<Node*>* path);
 		void Destroy(Node* node);
@@ -100,10 +103,12 @@ class BPlusTree
 		void Initialize(int m);
 		void Insert(float key, string value);
 		vector<string>* Search(float key);
-		void Search(float key1, float key2);
+		vector<tuple<float, string>>* Search(float key1, float key2);
 		void build(string input_file);
 		void Open_Output_File();
 		void Close_Output_File();
+		float get_max_insert();
+		float get_min_insert();
 		~BPlusTree();
 
 #ifdef DEBUG
@@ -123,6 +128,7 @@ class ParallelBPlusTree
 		vector<bloom_filter*> filters;
 		void thread_insert(vector<tuple<float, string>>* inserts, BPlusTree* tree, bloom_filter* filter);
 		void thread_search(BPlusTree* tree, float key);
+		void thread_range_search(BPlusTree* tree, float key1, float key2);
 		void sync_threads();
 	public:
 		ParallelBPlusTree(int trees_order, int num_trees = 0, int projected_element_count = 10000);

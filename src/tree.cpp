@@ -110,6 +110,15 @@ void BPlusTree :: Reveal_Tree(Node* node)
 //  Constructor
 BPlusTree :: BPlusTree(int order) : order(order) {
 	root = NULL;
+	first_insert = true;
+}
+
+float BPlusTree :: get_max_insert() {
+	return max_insert;
+}
+
+float BPlusTree :: get_min_insert() {
+	return min_insert;
 }
 
 
@@ -132,6 +141,19 @@ void BPlusTree :: Insert(float key, string value)
 		Node* rightNode = NULL;
 		float* keyToParent = new float;
 		bool rootPopped = false;
+
+		if (first_insert) {
+			max_insert = key;
+			min_insert = key;
+		}
+		else {
+			if (key > max_insert) {
+				max_insert = key;
+			}
+			if (key < min_insert) {
+				min_insert = key;
+			}
+		}
 
 		// obtain the search path from the root to leaf node and push it on to a stack
 		stack<Node*>* path = new stack<Node*>;
@@ -234,12 +256,13 @@ vector<string>* BPlusTree :: Search(float key)
 
 
 // operation: Search(key1, key2)
-void BPlusTree :: Search(float key1, float key2)
+vector<tuple<float, string>>* BPlusTree :: Search(float key1, float key2)
 {
+	vector<tuple<float, string>>* result = new vector<tuple<float, string>>;
 	// check if tree is empty
 	if(NULL == root)
 	{
-		outputFile<<"Null"<<endl;
+		return result;
 	}
 
 	// if it is a valid range search
@@ -289,34 +312,17 @@ void BPlusTree :: Search(float key1, float key2)
 			// check if key is within the search range
 			if((key1 <= keys[index - keys.begin()]) && (keys[index - keys.begin()] <= key2))
 			{
-				if(!firstPass)
-				{
-					outputFile<<",";
-				}
-
 				// display the key and its corresponding values
-				for(i = 0; i < values[index - keys.begin()].size() - 1; i++)
+				for(i = 0; i < values[index - keys.begin()].size(); i++)
 				{
-					outputFile<<"("<<keys[index - keys.begin()]<<","<<values[index - keys.begin()][i]<<"),";
+					tuple<float, string> tup = make_tuple(keys[index - keys.begin()], values[index - keys.begin()][i]);
+					result->push_back(tup);
 				}
-				outputFile<<"("<<keys[index - keys.begin()]<<","<<values[index - keys.begin()][i]<<")";
 			}
 
 			// if key is not within the search range
 			else
 			{
-				// check if atleast one key was in the search range
-				if(!firstPass)
-				{
-					outputFile<<endl;
-				}
-
-				// if no keys belonged within the search range
-				else
-				{
-					outputFile<<"Null"<<endl;
-				}
-
 				// exit the loop
 				break;
 			}
@@ -326,6 +332,7 @@ void BPlusTree :: Search(float key1, float key2)
 		}
 
 		delete(path);
+		return result;
 	}
 }
 

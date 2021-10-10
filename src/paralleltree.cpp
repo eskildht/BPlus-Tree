@@ -1,4 +1,5 @@
 #include "main.h"
+#include <sstream>
 
 // Constructor
 ParallelBPlusTree :: ParallelBPlusTree(int trees_order, int num_trees, int projected_element_count) : trees_order(trees_order) {
@@ -52,9 +53,13 @@ void ParallelBPlusTree :: thread_insert(vector<tuple<float, string>>* inserts, B
 
 // Build the BPlusTrees in parallel after all data is loaded into main memory
 void ParallelBPlusTree :: build(string input_file) {
+#ifdef DEBUG
+	std::cout << "Building ParallelBPlustree...\n";
+#endif
 	std::ifstream file(input_file);
 	int pos = ERROR;
 	float key = ERROR;
+	int cnt = 0;
 	string line, value;
 	vector<tuple<float, string>> inserts;
 
@@ -68,6 +73,7 @@ void ParallelBPlusTree :: build(string input_file) {
 
 			// add (key, value) to in-memory vector
 			inserts.push_back(make_tuple(key, value));
+			cnt++;
 		}
 	}
 
@@ -101,6 +107,10 @@ void ParallelBPlusTree :: build(string input_file) {
 	//		std::cout << "Tree " << i << std::endl;
 	//		trees[i]->Print_Tree();
 	//	}
+
+#ifdef DEBUG
+	std::cout << "Build on " << cnt << " key-value pairs finished\n";
+#endif
 }
 
 void ParallelBPlusTree :: search(float key) {
@@ -110,29 +120,39 @@ void ParallelBPlusTree :: search(float key) {
 	for (int i = 0; i < num_trees; i++) {
 		if (filters[i]->contains(std::to_string(key))) {
 #ifdef DEBUG
-			std::cout << "Filter " << i << " reported that it contains " << key << "\n";
+			std::stringstream msg;
+			msg << "Filter " << i << " reported that it contains " << key << "\n";
+			std::cout << msg.str();
 #endif
-			std::thread th (&ParallelBPlusTree::thread_search, this, trees[i], (float) key);
+			std::thread th (&ParallelBPlusTree::thread_search, this, trees[i], key);
 			threads.push_back(std::move(th));
 		}
 	}
 	sync_threads();
+#ifdef DEBUG
 	// Flush cout
 	std::cout << std::endl;
+#endif
 }
 
 void ParallelBPlusTree :: thread_search(BPlusTree* tree, float key) {
 	vector<string>* result = tree->Search(key);
 #ifdef DEBUG
 	for (auto val : *result) {
-		std::cout << val << ", ";
+		std::stringstream msg;
+		msg << val << ", ";
+		std::cout << msg.str();
 	}
 #endif
+	delete(result);
 }
 
 void ParallelBPlusTree :: insert(float key, string value, bool preserve_locality) {
 	// Insert a single key, value pair into the index structure
 	// Optionally preserve_locality
+#ifdef DEBUG
+	std::cout << "Inserting (" << key << ", " << value << ")\n";
+#endif
 	if (preserve_locality) {
 		for (int i = 0; i < num_trees; i++) {
 			if (filters[i]->contains(std::to_string(key))) {
@@ -144,6 +164,47 @@ void ParallelBPlusTree :: insert(float key, string value, bool preserve_locality
 	int rand_int = uni(rng);
 	filters[rand_int]->insert(std::to_string(key));
 	trees[rand_int]->Insert(key, value);
+}
+
+void ParallelBPlusTree :: search(float key1, float key2) {
+#ifdef DEBUG
+	std::cout << "Searching for keys in range [" << key1 << ", " << key2 << "]\n";
+	bool trees_searched = false;
+#endif
+	for (int i = 0; i < num_trees; i++) {
+		float max = trees[i]->get_max_insert();
+		float min = trees[i]->get_min_insert();
+		if ((min <= key1 <= max) || (min <= key2 <= max) || (key1 < min && key2 > max)) {
+#ifdef DEBUG
+			if (!trees_searched) {
+				trees_searched = true;
+			}
+			std::stringstream msg;
+			msg << "Tree " << i << " will get searched\n";
+			std::cout << msg.str();
+#endif
+			std::thread th (&ParallelBPlusTree::thread_range_search, this, trees[i], key1, key2);
+			threads.push_back(std::move(th));
+		}
+	}
+	sync_threads();
+#ifdef DEBUG
+	if (!trees_searched) {
+		std::cout << "No values found for range";
+	}
+#endif
+}
+
+void ParallelBPlusTree :: thread_range_search(BPlusTree* tree, float key1, float key2) {
+	vector<tuple<float, string>>* result = tree->Search(key1, key2);
+#ifdef DEBUG
+	for (auto tup : *result) {
+		std::stringstream msg;
+		msg << "(" << get<0>(tup) << ", " << get<1>(tup) << ")\n";
+		std::cout << msg.str();
+	}
+#endif
+	delete(result);
 }
 
 void ParallelBPlusTree :: sync_threads() {
