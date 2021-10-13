@@ -1,5 +1,6 @@
 #include "main.h"
 #include <sstream>
+#include <cmath>
 
 // Constructor
 ParallelBPlusTree :: ParallelBPlusTree(int trees_order, int num_trees, int projected_element_count) : trees_order(trees_order) {
@@ -174,7 +175,9 @@ void ParallelBPlusTree :: search(float key1, float key2) {
 	for (int i = 0; i < num_trees; i++) {
 		float max = trees[i]->get_max_insert();
 		float min = trees[i]->get_min_insert();
-		if ((min <= key1 <= max) || (min <= key2 <= max) || (key1 < min && key2 > max)) {
+		float k1 = std::isnan(key1) ? min : key1;
+		float k2 = std::isnan(key2) ? max : key2;
+		if (k1 <= max && min <= k2) {
 #ifdef DEBUG
 			if (!trees_searched) {
 				trees_searched = true;
@@ -183,7 +186,7 @@ void ParallelBPlusTree :: search(float key1, float key2) {
 			msg << "Tree " << i << " will get searched\n";
 			std::cout << msg.str();
 #endif
-			std::thread th (&ParallelBPlusTree::thread_range_search, this, trees[i], key1, key2);
+			std::thread th (&ParallelBPlusTree::thread_range_search, this, trees[i], k1, k2);
 			threads.push_back(std::move(th));
 		}
 	}

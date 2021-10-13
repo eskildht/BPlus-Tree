@@ -1,5 +1,6 @@
 #include "main.h"
 #include <chrono>
+#include <limits>
 
 // main function
 int main() {
@@ -22,6 +23,11 @@ int main() {
 	std::cout << "Insert took: " << ms_double.count() << "ms" << std::endl;
 	t1 = chrono::high_resolution_clock::now();
 	ptree.search(72.01, 75.12);
+	t2 = chrono::high_resolution_clock::now();
+	ms_double = t2 - t1;
+	std::cout << "Range search took: " << ms_double.count() << "ms" << std::endl;
+	t1 = chrono::high_resolution_clock::now();
+	ptree.search(std::numeric_limits<float>::quiet_NaN(), 75.12);
 	t2 = chrono::high_resolution_clock::now();
 	ms_double = t2 - t1;
 	std::cout << "Range search took: " << ms_double.count() << "ms" << std::endl;
