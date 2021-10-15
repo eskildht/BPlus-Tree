@@ -4,9 +4,9 @@
 
 // main function
 int main() {
-	ParallelBPlusTree ptree(3, 4);
+	ParallelBPlusTree ptree(3, 4, 1000000);
 	auto t1 = chrono::high_resolution_clock::now();
-	ptree.build("input_file.txt");
+	ptree.build("input_files/input_file_1000000.txt");
 	auto t2 = chrono::high_resolution_clock::now();
 	chrono::duration<double, std::milli> ms_double = t2 - t1;
 	std::cout << "Build took: " << ms_double.count() << "ms" << std::endl;

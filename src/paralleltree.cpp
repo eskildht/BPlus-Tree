@@ -80,7 +80,7 @@ void ParallelBPlusTree :: build(string input_file) {
 
 	// Split inserts into number of trees/threads vectors
 	size_t const size = inserts.size() / num_trees;
-	vector<vector<tuple<float, string>>> insert_parts;
+	vector<vector<tuple<float, string>>> insert_parts(num_trees);
 	for (int i = 0; i < (num_trees-1); i++) {
 		vector<tuple<float, string>> insert_part(inserts.begin() + i*size, inserts.begin() + (i+1)*size);
 		insert_parts.push_back(insert_part);
