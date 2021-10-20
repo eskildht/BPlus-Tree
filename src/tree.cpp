@@ -347,7 +347,7 @@ std::chrono::duration<double, std::milli> BPlusTree :: build(string input_file) 
 	int pos = ERROR;
 	float key = ERROR;
 	string line, value;
-	vector<tuple<float, string>*> inserts;
+	vector<tuple<float, string>> inserts;
 
 	// Get all inserts from file
 	while (getline(file, line)) {
@@ -358,15 +358,13 @@ std::chrono::duration<double, std::milli> BPlusTree :: build(string input_file) 
 			value = line.substr(pos + 1, line.size() - pos - 2);
 
 			// add (key, value) to in-memory vector
-			tuple<float, string> tup = make_tuple(key, value);
-			tuple<float, string>* tup_ptr = &tup;
-			inserts.push_back(tup_ptr);
+			inserts.push_back(make_tuple(key, value));
 		}
 	}
 
 	auto t1 = std::chrono::high_resolution_clock::now();
 	for (auto insert : inserts) {
-		Insert(get<0>(*insert), get<1>(*insert));
+		Insert(get<0>(insert), get<1>(insert));
 	}
 	auto t2 = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> ms_double = t2 - t1;

@@ -46,8 +46,7 @@ ParallelBPlusTree :: ~ParallelBPlusTree() {
 void ParallelBPlusTree :: thread_insert(vector<tuple<float, string>>* inserts, BPlusTree* tree, bloom_filter* filter) {
 	for (auto insert : *inserts) {
 		float key = get<0>(insert);
-		string val = get<1>(insert);
-		tree->Insert(key, val);
+		tree->Insert(key, get<1>(insert));
 		filter->insert(std::to_string(key));
 	}
 }
@@ -81,7 +80,7 @@ std::chrono::duration<double, std::milli> ParallelBPlusTree :: build(string inpu
 	auto t1 = std::chrono::high_resolution_clock::now();
 	// Split inserts into number of trees/threads vectors
 	size_t const size = inserts.size() / num_trees;
-	vector<vector<tuple<float, string>>> insert_parts(num_trees);
+	vector<vector<tuple<float, string>>> insert_parts;
 	for (int i = 0; i < (num_trees-1); i++) {
 		vector<tuple<float, string>> insert_part(inserts.begin() + i*size, inserts.begin() + (i+1)*size);
 		insert_parts.push_back(insert_part);
