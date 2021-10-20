@@ -342,7 +342,7 @@ vector<tuple<float, string>>* BPlusTree :: Search(float key1, float key2)
 	}
 }
 
-void BPlusTree :: build(string input_file) {
+std::chrono::duration<double, std::milli> BPlusTree :: build(string input_file) {
 	std::ifstream file(input_file);
 	int pos = ERROR;
 	float key = ERROR;
@@ -364,9 +364,13 @@ void BPlusTree :: build(string input_file) {
 		}
 	}
 
+	auto t1 = std::chrono::high_resolution_clock::now();
 	for (auto insert : inserts) {
 		Insert(get<0>(*insert), get<1>(*insert));
 	}
+	auto t2 = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> ms_double = t2 - t1;
+	return ms_double;
 }
 
 
