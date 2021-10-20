@@ -165,11 +165,11 @@ void ParallelBPlusTree :: search(float key1, float key2) {
 	bool trees_searched = false;
 #endif
 	for (int i = 0; i < num_trees; i++) {
-		float max = trees[i]->get_max_insert();
-		float min = trees[i]->get_min_insert();
-		float k1 = std::isnan(key1) ? min : key1;
-		float k2 = std::isnan(key2) ? max : key2;
-		if (k1 <= max && min <= k2) {
+		float max_insert = trees[i]->get_max_insert();
+		float min_insert = trees[i]->get_min_insert();
+		float k1 = std::isnan(key1) ? min_insert : key1;
+		float k2 = std::isnan(key2) ? max_insert : key2;
+		if (k1 <= max_insert && min_insert <= k2) {
 #ifdef DEBUG
 			if (!trees_searched) {
 				trees_searched = true;

@@ -255,6 +255,12 @@ vector<string>* BPlusTree :: Search(float key)
 }
 
 
+vector<tuple<float, string>>* BPlusTree :: scan(float key1, float key2) {
+		float k1 = std::isnan(key1) ? get_min_insert() : key1;
+		float k2 = std::isnan(key2) ? get_max_insert() : key2;
+		return Search(k1, k2);
+}
+
 // operation: Search(key1, key2)
 vector<tuple<float, string>>* BPlusTree :: Search(float key1, float key2)
 {

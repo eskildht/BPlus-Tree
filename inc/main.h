@@ -105,6 +105,7 @@ class BPlusTree
 		void Insert(float key, string value);
 		vector<string>* Search(float key);
 		vector<tuple<float, string>>* Search(float key1, float key2);
+		vector<tuple<float, string>>* scan(float key1, float key2);
 		void build(string input_file);
 		void Open_Output_File();
 		void Close_Output_File();
