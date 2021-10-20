@@ -1,10 +1,10 @@
 #include "main.h"
-#include <chrono>
-#include <limits>
 
-// Build parallel tree 10 times using order 128
-// Report average time
+// Build ParallelBPlusTree 10 times using trees/threads=4, order=128
+// Report average time and average performance
 int main() {
+	std::cout << "----------test-parallel-build----------\n";
+	std::cout << "ParallelBPlusTree: trees/threads=4, order=128\n";
 	std::chrono::duration<double, std::milli> tot_time;
 	for (int i=0; i < 10; i++) {
 		ParallelBPlusTree ptree(128, 4, 1000000);
@@ -13,5 +13,7 @@ int main() {
 		std::cout << "Build " << i << " took: " << build_time.count() << "ms" << "\n";
 	}
 	std::chrono::duration<double, std::milli> avg_time = tot_time/10;
-	std::cout << "Avarage build time of 10 runs: " << avg_time.count() << "ms" << std::endl;
+	double m_ops = 1000/avg_time.count();
+	std::cout << "Average build time: " << avg_time.count() << "ms\n";
+	std::cout << "Avarage insert performance: " << m_ops << " MOps/sec" << std::endl;
 }

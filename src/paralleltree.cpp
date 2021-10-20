@@ -88,13 +88,6 @@ std::chrono::duration<double, std::milli> ParallelBPlusTree :: build(string inpu
 	}
 	vector<tuple<float, string>> insert_part_last(inserts.begin() + (num_trees-1)*size, inserts.end());
 	insert_parts.push_back(insert_part_last);
-	// Print all vectors about to insert
-	//	for (auto part : insert_parts) {
-	//		for (auto tup : part) {
-	//			std::cout << "(" << get<0>(tup) << ", " << get<1>(tup) << ") ";
-	//		}
-	//		std::cout << "\n\n";
-	//	}
 
 	// Start threads
 	for (int i = 0; i < num_trees; i++) {
@@ -104,11 +97,6 @@ std::chrono::duration<double, std::milli> ParallelBPlusTree :: build(string inpu
 	// Synchronize all threads
 	sync_threads();
 
-	// Print all trees
-	//	for (int i = 0; i < num_trees; i++) {
-	//		std::cout << "Tree " << i << std::endl;
-	//		trees[i]->Print_Tree();
-	//	}
 	// End build timer
 	auto t2 = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> ms_double = t2 - t1;

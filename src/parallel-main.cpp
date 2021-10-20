@@ -4,7 +4,7 @@
 
 // main function
 int main() {
-	ParallelBPlusTree ptree(3, 4, 1000000);
+	ParallelBPlusTree ptree(128, 4, 1000000);
 	auto t1 = chrono::high_resolution_clock::now();
 	ptree.build("input_files/input_file_1000000.txt");
 	auto t2 = chrono::high_resolution_clock::now();
