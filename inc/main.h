@@ -133,7 +133,7 @@ class ParallelBPlusTree
 	public:
 		ParallelBPlusTree(int trees_order, int num_trees = 0, int projected_element_count = 10000);
 		~ParallelBPlusTree();
-		void build(string input_file);
+		std::chrono::duration<double, std::milli> build(string input_file);
 		void search(float key);
 		void search(float key1, float key2);
 		void insert(float key, string value, bool preserve_locality=true);

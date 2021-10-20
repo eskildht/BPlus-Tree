@@ -53,7 +53,7 @@ void ParallelBPlusTree :: thread_insert(vector<tuple<float, string>>* inserts, B
 }
 
 // Build the BPlusTrees in parallel after all data is loaded into main memory
-void ParallelBPlusTree :: build(string input_file) {
+std::chrono::duration<double, std::milli> ParallelBPlusTree :: build(string input_file) {
 #ifdef DEBUG
 	std::cout << "Building ParallelBPlustree...\n";
 #endif
@@ -77,7 +77,8 @@ void ParallelBPlusTree :: build(string input_file) {
 			cnt++;
 		}
 	}
-
+	// Start build timer
+	auto t1 = std::chrono::high_resolution_clock::now();
 	// Split inserts into number of trees/threads vectors
 	size_t const size = inserts.size() / num_trees;
 	vector<vector<tuple<float, string>>> insert_parts(num_trees);
@@ -108,10 +109,13 @@ void ParallelBPlusTree :: build(string input_file) {
 	//		std::cout << "Tree " << i << std::endl;
 	//		trees[i]->Print_Tree();
 	//	}
-
+	// End build timer
+	auto t2 = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> ms_double = t2 - t1;
 #ifdef DEBUG
 	std::cout << "Build on " << cnt << " key-value pairs finished\n";
 #endif
+	return ms_double;
 }
 
 void ParallelBPlusTree :: search(float key) {
