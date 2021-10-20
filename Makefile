@@ -13,8 +13,7 @@ SRC_SINGLE = src/single-main.cpp \
 	     src/leafnode.cpp
 
 
-SRC_PARALLEL = src/parallel-main.cpp \
-	       src/paralleltree.cpp \
+SRC_PARALLEL = src/paralleltree.cpp \
 	       src/tree.cpp \
 	       src/node.cpp \
 	       src/internalnode.cpp \
@@ -33,6 +32,11 @@ single:	$(SRC_SINGLE)
 parallel: $(SRC_PARALLEL)
 	@echo "Compiling parallel B+ Tree source... "
 	@g++ -std=c++11 $(SRC_PARALLEL) -I$(INC_DIR) -o main-parallel.out -w
+	@echo "Done!"
+
+test-parallel-build: $(SRC_PARALLEL)
+	@echo "Compiling test-parallel-build... "
+	@g++ -std=c++11 $(SRC_PARALLEL) tests/parallel-build.cpp -I$(INC_DIR) -o test-parallel-build.out -w
 	@echo "Done!"
 
 clean:
