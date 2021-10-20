@@ -34,5 +34,5 @@ int main(int argc, char *argv[]) {
 	double m_ops = 1000/avg_time.count();
 	double k_ops = m_ops*1000;
 	std::cout << "Average build time: " << avg_time.count() << "ms\n";
-	std::cout << "Avarage insert performance: " << k_ops << " KOps/sec" << std::endl;
+	std::cout << "Average insert performance: " << k_ops << " KOps/sec" << std::endl;
 }
