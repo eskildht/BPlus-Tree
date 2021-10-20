@@ -1,6 +1,6 @@
 #include "main.h"
 
-// Build ParallelBPlusTree 10 times using trees/threads=4, order=128
+// Build ParallelBPlusTree using config specified by args or defult
 // Report average time and average performance
 int main(int argc, char *argv[]) {
 	int trees = 4, order = 128, runs = 10;
@@ -19,7 +19,6 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
-
 	std::cout << "----------test-parallel-build----------\n";
 	std::cout << "ParallelBPlusTree: trees/threads=" << trees << ", order=" << order << "\n";
 	std::cout << "Doing " << runs << " run(s)\n";
