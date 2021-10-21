@@ -3,7 +3,7 @@
 
 
 // uncomment for debug mode
-#define DEBUG
+//#define DEBUG
 
 
 #include <iostream>
