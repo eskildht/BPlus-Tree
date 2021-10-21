@@ -28,10 +28,12 @@ int main(int argc, char *argv[]) {
 		auto build_time = ptree.build("input_files/input_file_1000000.txt");
 		tot_time += build_time;
 		std::cout << "Build " << i << " took: " << build_time.count() << "ms" << "\n";
+		ptree.search(1028.04);
 	}
 	std::chrono::duration<double, std::milli> avg_time = tot_time/runs;
 	double m_ops = 1000/avg_time.count();
 	double k_ops = m_ops*1000;
 	std::cout << "Average build time: " << avg_time.count() << "ms\n";
 	std::cout << "Average insert performance: " << k_ops << " KOps/sec" << std::endl;
+
 }
