@@ -145,6 +145,7 @@ void BPlusTree :: Insert(float key, string value)
 		if (first_insert) {
 			max_insert = key;
 			min_insert = key;
+			first_insert = false;
 		}
 		else {
 			if (key > max_insert) {
