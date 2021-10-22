@@ -11,7 +11,12 @@ SRC_PARALLEL = src/paralleltree.cpp \
 	       src/internalnode.cpp \
 	       src/leafnode.cpp
 
-test-all: test-build test-parallel-build
+test-all: test-insert test-build test-parallel-build
+
+test-insert: $(SRC)
+	@echo "Compiling test-insert... "
+	@g++ -std=c++11 $(SRC) tests/insert.cpp -I$(INC_DIR) -o out/test-insert.out -w
+	@echo "Done!"
 
 test-build: $(SRC)
 	@echo "Compiling test-build... "
