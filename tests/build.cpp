@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 	std::cout << "Doing " << runs << " runs(s)\n";
 	std::chrono::duration<double, std::milli> tot_time;
 	for (int i=0; i < runs; i++) {
-		BPlusTree tree(128);
+		BPlusTree tree(order);
 		auto build_time = tree.build("input_files/input_file_1000000.txt");
 		tot_time += build_time;
 		std::cout << "Build " << i << " took: " << build_time.count() << "ms" << "\n";
