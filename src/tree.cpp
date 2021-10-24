@@ -16,21 +16,8 @@ void BPlusTree :: Search_Path(Node* node, float key, stack<Node*>* path)
 		// search for the given key in the current node
 		vector<float> keys = node->Get_Keys();
 		vector<Node*> children = node->Get_Children();
-		vector<float>::iterator index = lower_bound(keys.begin(), keys.end(), key);
-
-		// check if key is found
-		if(key == keys[index - keys.begin()])
-		{
-			// recursively repeat by searching the path through the corresponding right child index
-			Search_Path(children[(index - keys.begin()) + 1], key, path);
-		}
-
-		// if key is not found
-		else
-		{
-			// recursively repeat by searching the path through the corresponding left child index
-			Search_Path(children[index - keys.begin()], key, path);
-		}
+		vector<float>::iterator index = upper_bound(keys.begin(), keys.end(), key);
+		Search_Path(children[(index - keys.begin())], key, path);
 	}
 }
 
