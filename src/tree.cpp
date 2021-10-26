@@ -217,18 +217,18 @@ vector<string>* BPlusTree :: Search(float key)
 
 		// search for the key in the leaf node, which is at the top of the stack
 		vector<float>* keys = path->top()->Get_Keys();
-		vector< vector <string> > values = path->top()->Get_Values();
+		vector< vector <string> >* values = path->top()->Get_Values();
 		vector<float>::iterator index = lower_bound(keys->begin(), keys->end(), key);
 
 		// check if key is found
 		if(key == (*keys)[index - keys->begin()])
 		{
 			// display the values
-			for(i = 0; i < values[index - keys->begin()].size() - 1; i++)
+			for(i = 0; i < (*values)[index - keys->begin()].size() - 1; i++)
 			{
-				result->push_back(values[index - keys->begin()][i]);
+				result->push_back((*values)[index - keys->begin()][i]);
 			}
-			result->push_back(values[index - keys->begin()][i]);
+			result->push_back((*values)[index - keys->begin()][i]);
 		}
 
 		// if key is not found
@@ -272,7 +272,7 @@ vector<tuple<float, string>>* BPlusTree :: Search(float key1, float key2)
 
 		// search for the key in the leaf node, which is at the top of the stack
 		vector<float>* keys = path->top()->Get_Keys();
-		vector< vector <string> > values = path->top()->Get_Values();
+		vector< vector <string> >* values = path->top()->Get_Values();
 		Node* next = path->top()->Get_Next();
 		vector<float>::iterator index = lower_bound(keys->begin(), keys->end(), key1);
 
@@ -307,9 +307,9 @@ vector<tuple<float, string>>* BPlusTree :: Search(float key1, float key2)
 			if((key1 <= (*keys)[index - keys->begin()]) && ((*keys)[index - keys->begin()] <= key2))
 			{
 				// display the key and its corresponding values
-				for(i = 0; i < values[index - keys->begin()].size(); i++)
+				for(i = 0; i < (*values)[index - keys->begin()].size(); i++)
 				{
-					tuple<float, string> tup = make_tuple((*keys)[index - keys->begin()], values[index - keys->begin()][i]);
+					tuple<float, string> tup = make_tuple((*keys)[index - keys->begin()], (*values)[index - keys->begin()][i]);
 					result->push_back(tup);
 				}
 			}

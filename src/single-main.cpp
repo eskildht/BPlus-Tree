@@ -12,11 +12,12 @@ int main(int argc, char* argv[])
 	for (auto val : *res) {
 		std::cout << val << "\n";
 	}
+	delete(res);
 	auto result = tree.Search(-0.07, 0.18);
 	for (auto keyval : *result) {
 		std::cout << "(" << get<0>(keyval) << ", " << get<1>(keyval) << ")";
 	}
-
+	delete(result);
 	return 0;
 }
 

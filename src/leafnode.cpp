@@ -6,7 +6,7 @@ using namespace std;
 
 // constructor for leaf node
 LeafNode :: LeafNode()
-{	
+{
 	isLeaf = true;
 	prev = this;
 	next = this;
@@ -35,7 +35,7 @@ void LeafNode :: Insert(float key, string value)
 		//insert the corresponding value
 		vector<string> newValue;
 		newValue.push_back(value);
-		index = lower_bound(keys.begin(), keys.end(), key);	
+		index = lower_bound(keys.begin(), keys.end(), key);
 		values.insert(values.begin() + (index - keys.begin()), newValue);
 	}
 }
@@ -69,10 +69,10 @@ Node* LeafNode :: Split(float* keyToParent)
 
 
 // getter function for accessing values
-vector< vector <string> > LeafNode :: Get_Values()
+vector< vector <string> >* LeafNode :: Get_Values()
 {
 	// return the vector of values
-	return values;
+	return &values;
 }
 
 

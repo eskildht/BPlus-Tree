@@ -45,7 +45,7 @@ class Node
 		virtual void Search(float key1, float key2){};
 		virtual Node* Split(float* keyToParent){};
 		virtual vector<Node*>* Get_Children(){};
-		virtual vector< vector <string> > Get_Values(){};
+		virtual vector< vector <string> >* Get_Values(){};
 		virtual Node* Get_Next(){};
 };
 
@@ -77,7 +77,7 @@ class LeafNode : public Node
 		LeafNode();
 		void Insert(float key, string value);
 		Node* Split(float* keyToParent);
-		vector< vector <string> > Get_Values();
+		vector< vector <string> >* Get_Values();
 		Node* Get_Next();
 };
 
