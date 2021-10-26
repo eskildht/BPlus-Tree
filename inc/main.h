@@ -3,7 +3,7 @@
 
 
 // uncomment for debug mode
-//#define DEBUG
+#define DEBUG
 
 
 #include <iostream>
@@ -44,7 +44,7 @@ class Node
 		virtual void Search(float key){};
 		virtual void Search(float key1, float key2){};
 		virtual Node* Split(float* keyToParent){};
-		virtual vector<Node*> Get_Children(){};
+		virtual vector<Node*>* Get_Children(){};
 		virtual vector< vector <string> > Get_Values(){};
 		virtual Node* Get_Next(){};
 };
@@ -61,7 +61,7 @@ class InternalNode : public Node
 		void Insert(float key, Node* rightChild);
 		void Insert(float key, Node* leftChild, Node* rightChild);
 		Node* Split(float* keyToParent);
-		vector<Node*> Get_Children();
+		vector<Node*>* Get_Children();
 };
 
 

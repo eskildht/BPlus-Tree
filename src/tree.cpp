@@ -15,9 +15,9 @@ void BPlusTree :: Search_Path(Node* node, float key, stack<Node*>* path)
 	{
 		// search for the given key in the current node
 		vector<float> keys = node->Get_Keys();
-		vector<Node*> children = node->Get_Children();
+		vector<Node*>* children = node->Get_Children();
 		vector<float>::iterator index = upper_bound(keys.begin(), keys.end(), key);
-		Search_Path(children[(index - keys.begin())], key, path);
+		Search_Path((*children)[(index - keys.begin())], key, path);
 	}
 }
 
@@ -28,8 +28,8 @@ void BPlusTree :: Destroy(Node* node)
 	// recursively repeat the function to delete all the nodes level by level, starting with the leaf nodes
 	if (!node->Get_IsLeaf())
 	{
-		vector<Node*> children = node->Get_Children();
-		for(vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
+		vector<Node*>* children = node->Get_Children();
+		for(vector<Node*>::iterator index = children->begin(); index != children->end(); index++)
 		{
 			Destroy(*index);
 		}
@@ -73,9 +73,9 @@ void BPlusTree :: Reveal_Tree(Node* node)
 	if (!node->Get_IsLeaf())
 	{
 		// display the keys in the children of the current internal node
-		vector<Node*> children = node->Get_Children();
+		vector<Node*>* children = node->Get_Children();
 		cout<<"children"<<endl<<"--------"<<endl;
-		for(vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
+		for(vector<Node*>::iterator index = children->begin(); index != children->end(); index++)
 		{
 			vector<float> childKeys = (*index)->Get_Keys();
 			for(vector<float>::iterator i = childKeys.begin(); i != childKeys.end(); i++)
@@ -86,7 +86,7 @@ void BPlusTree :: Reveal_Tree(Node* node)
 		}
 
 		// recursively repeat revelation of the next level
-		for(vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
+		for(vector<Node*>::iterator index = children->begin(); index != children->end(); index++)
 		{
 			Reveal_Tree(*index);
 		}

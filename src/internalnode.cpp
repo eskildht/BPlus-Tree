@@ -45,8 +45,8 @@ Node* InternalNode :: Split(float* keyToParent)
 	// key to be moved up to the parent is the middle element in the current internal node
 	*keyToParent = keys[length/2];
 
-	// Copy the second half of the current internal node excluding the middle element to the 
-	// new right internal node. Erase the second half of the current internal node including 
+	// Copy the second half of the current internal node excluding the middle element to the
+	// new right internal node. Erase the second half of the current internal node including
 	// the middle element, and thus current internal node becomes the left internal node.
 	rightNode->keys.assign(keys.begin() + (length/2 + 1), keys.end());
 	rightNode->children.assign(children.begin() + (length/2 + 1), children.end());
@@ -59,8 +59,8 @@ Node* InternalNode :: Split(float* keyToParent)
 
 
 // getter function for accessing children
-vector<Node*> InternalNode :: Get_Children()
+vector<Node*>* InternalNode :: Get_Children()
 {
 	// return the children vector
-	return children;
+	return &children;
 }
