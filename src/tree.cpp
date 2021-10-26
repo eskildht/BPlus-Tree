@@ -14,10 +14,10 @@ void BPlusTree :: Search_Path(Node* node, float key, stack<Node*>* path)
 	if(!node->Get_IsLeaf())
 	{
 		// search for the given key in the current node
-		vector<float> keys = node->Get_Keys();
+		vector<float>* keys = node->Get_Keys();
 		vector<Node*>* children = node->Get_Children();
-		vector<float>::iterator index = upper_bound(keys.begin(), keys.end(), key);
-		Search_Path((*children)[(index - keys.begin())], key, path);
+		vector<float>::iterator index = upper_bound(keys->begin(), keys->end(), key);
+		Search_Path((*children)[(index - keys->begin())], key, path);
 	}
 }
 
@@ -62,8 +62,8 @@ void BPlusTree :: Reveal_Tree(Node* node)
 	}
 
 	// display the keys
-	vector<float> keys = node->Get_Keys();
-	for(vector<float>::iterator index = keys.begin(); index != keys.end(); index++)
+	vector<float>* keys = node->Get_Keys();
+	for(vector<float>::iterator index = keys->begin(); index != keys->end(); index++)
 	{
 		cout<<*index<<" ";
 	}
@@ -77,8 +77,8 @@ void BPlusTree :: Reveal_Tree(Node* node)
 		cout<<"children"<<endl<<"--------"<<endl;
 		for(vector<Node*>::iterator index = children->begin(); index != children->end(); index++)
 		{
-			vector<float> childKeys = (*index)->Get_Keys();
-			for(vector<float>::iterator i = childKeys.begin(); i != childKeys.end(); i++)
+			vector<float>* childKeys = (*index)->Get_Keys();
+			for(vector<float>::iterator i = childKeys->begin(); i != childKeys->end(); i++)
 			{
 				cout<<*i<<" ";
 			}
@@ -152,7 +152,7 @@ void BPlusTree :: Insert(float key, string value)
 
 		// Split the current node and insert the middle key & children in to the parent. Perform
 		// this as long as there is an imbalance in the tree, moving up the stack every iteration.
-		while(path->top()->Get_Keys().size() == order)
+		while(path->top()->Get_Keys()->size() == order)
 		{
 			// Update the current node as the left half and return the right half. Also
 			// obtain the middle element, which is the key to be moved up to the parent.
@@ -216,19 +216,19 @@ vector<string>* BPlusTree :: Search(float key)
 		Search_Path(root, key, path);
 
 		// search for the key in the leaf node, which is at the top of the stack
-		vector<float> keys = path->top()->Get_Keys();
+		vector<float>* keys = path->top()->Get_Keys();
 		vector< vector <string> > values = path->top()->Get_Values();
-		vector<float>::iterator index = lower_bound(keys.begin(), keys.end(), key);
+		vector<float>::iterator index = lower_bound(keys->begin(), keys->end(), key);
 
 		// check if key is found
-		if(key == keys[index - keys.begin()])
+		if(key == (*keys)[index - keys->begin()])
 		{
 			// display the values
-			for(i = 0; i < values[index - keys.begin()].size() - 1; i++)
+			for(i = 0; i < values[index - keys->begin()].size() - 1; i++)
 			{
-				result->push_back(values[index - keys.begin()][i]);
+				result->push_back(values[index - keys->begin()][i]);
 			}
-			result->push_back(values[index - keys.begin()][i]);
+			result->push_back(values[index - keys->begin()][i]);
 		}
 
 		// if key is not found
@@ -271,45 +271,45 @@ vector<tuple<float, string>>* BPlusTree :: Search(float key1, float key2)
 		Search_Path(root, key1, path);
 
 		// search for the key in the leaf node, which is at the top of the stack
-		vector<float> keys = path->top()->Get_Keys();
+		vector<float>* keys = path->top()->Get_Keys();
 		vector< vector <string> > values = path->top()->Get_Values();
 		Node* next = path->top()->Get_Next();
-		vector<float>::iterator index = lower_bound(keys.begin(), keys.end(), key1);
+		vector<float>::iterator index = lower_bound(keys->begin(), keys->end(), key1);
 
 		// display all the keys in the search range, along with their corresponding values
 		while(1)
 		{
 			// check if end of the current leaf node is reached
-			if((index - keys.begin()) == keys.size())
+			if((index - keys->begin()) == keys->size())
 			{
 				// go to the next leaf node
 				keys = next->Get_Keys();
 				values = next->Get_Values();
 				next = next->Get_Next();
-				index = keys.begin();
+				index = keys->begin();
 			}
 
 			// save the smallest key in the given search range
 			if(firstPass)
 			{
-				firstKey = keys[index - keys.begin()];
+				firstKey = (*keys)[index - keys->begin()];
 			}
 
 
 			// check if already iterated through the doubly linked list once
-			if(!(firstPass || (keys[index - keys.begin()] != firstKey)))
+			if(!(firstPass || ((*keys)[index - keys->begin()] != firstKey)))
 			{
 				// exit the loop
 				break;
 			}
 
 			// check if key is within the search range
-			if((key1 <= keys[index - keys.begin()]) && (keys[index - keys.begin()] <= key2))
+			if((key1 <= (*keys)[index - keys->begin()]) && ((*keys)[index - keys->begin()] <= key2))
 			{
 				// display the key and its corresponding values
-				for(i = 0; i < values[index - keys.begin()].size(); i++)
+				for(i = 0; i < values[index - keys->begin()].size(); i++)
 				{
-					tuple<float, string> tup = make_tuple(keys[index - keys.begin()], values[index - keys.begin()][i]);
+					tuple<float, string> tup = make_tuple((*keys)[index - keys->begin()], values[index - keys->begin()][i]);
 					result->push_back(tup);
 				}
 			}

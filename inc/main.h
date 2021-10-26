@@ -37,7 +37,7 @@ class Node
 
 	public:
 		bool Get_IsLeaf();
-		vector<float> Get_Keys();
+		vector<float>* Get_Keys();
 		virtual void Insert(float key, string value){};
 		virtual void Insert(float key, Node* rightChild){};
 		virtual void Insert(float key, Node* leftChild, Node* rightChild){};

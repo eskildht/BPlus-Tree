@@ -13,8 +13,8 @@ bool Node :: Get_IsLeaf()
 
 
 // getter function for accessing keys
-vector<float> Node :: Get_Keys()
+vector<float>* Node :: Get_Keys()
 {
 	// return the vector of keys
-	return keys;
+	return &keys;
 }
