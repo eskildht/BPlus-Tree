@@ -23,7 +23,7 @@ void LeafNode :: Insert(float key, string value)
 	if((0 != keys.size()) && (key == keys[index - keys.begin()]))
 	{
 		// add the duplicate value for the given key
-		values[index - keys.begin()].push_back(value);
+		values[index - keys.begin()].push_back(std::move(value));
 	}
 
 	// if inserting a new key and value
@@ -34,9 +34,9 @@ void LeafNode :: Insert(float key, string value)
 
 		//insert the corresponding value
 		vector<string> newValue;
-		newValue.push_back(value);
+		newValue.push_back(std::move(value));
 		index = lower_bound(keys.begin(), keys.end(), key);
-		values.insert(values.begin() + (index - keys.begin()), newValue);
+		values.insert(values.begin() + (index - keys.begin()), std::move(newValue));
 	}
 }
 
