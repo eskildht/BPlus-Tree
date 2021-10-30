@@ -2,6 +2,7 @@
 
 int main(int argc, char *argv[]) {
 	int order = 128, searches = 100000, scans = 10;
+	std::string file = "input_files/input_file_1000000.txt";
 	if (argc > 1) {
 		// Parse args
 		for (int i=1; i<argc; i++) {
@@ -15,6 +16,10 @@ int main(int argc, char *argv[]) {
 			else if (arg == "-sc") {
 				scans = std::stoi(argv[i+1]);
 			}
+			else if (arg == "-f") {
+				std::string file_name = argv[i+1];
+				file = "input_files/" + file_name;
+			}
 		}
 	}
 	std::cout << "----------test-search----------\n";
@@ -23,7 +28,7 @@ int main(int argc, char *argv[]) {
 	std::cout << "Doing " << scans << " scans\n";
 	std::cout << "Building tree...\n";
 	BPlusTree tree(order);
-	auto build_time = tree.build("input_files/input_file_1000000.txt");
+	auto build_time = tree.build(file);
 	std::cout << "Build took: " << build_time.count() << "ms" << "\n";
 	std::chrono::duration<double, std::micro> tot_time;
 	std::cout << "Searching tree...\n";
