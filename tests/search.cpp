@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[]) {
 	int order = 128, searches = 100000, scans = 10;
-	std::string file = "input_files/input_file_1000000.txt";
+	std::string file = "input_files/input_file_1000000.txt", search_method = "rand";
 	if (argc > 1) {
 		// Parse args
 		for (int i=1; i<argc; i++) {
@@ -20,6 +20,9 @@ int main(int argc, char *argv[]) {
 				std::string file_name = argv[i+1];
 				file = "input_files/" + file_name;
 			}
+			else if (arg == "-sm") {
+				search_method = argv[i+1];
+			}
 		}
 	}
 	std::cout << "----------test-search----------\n";
@@ -32,14 +35,30 @@ int main(int argc, char *argv[]) {
 	std::cout << "Build took: " << build_time.count() << "ms" << "\n";
 	std::chrono::duration<double, std::micro> tot_time;
 	std::cout << "Searching tree...\n";
-	for (int i=0; i < searches; i++) {
-		float key = -1500 + static_cast <float> (rand())/(static_cast <float> (RAND_MAX/3000));
-		key = roundf(key * 100) / 100;
-		auto t1 = std::chrono::high_resolution_clock::now();
-		tree.Search(key);
-		auto t2 = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double, std::micro> search_time = t2 - t1;
-		tot_time += search_time;
+	if (search_method == "rand") {
+		for (int i=0; i < searches; i++) {
+			float key = -1500 + static_cast <float> (rand())/(static_cast <float> (RAND_MAX/3000));
+			key = roundf(key * 100) / 100;
+			auto t1 = std::chrono::high_resolution_clock::now();
+			tree.Search(key);
+			auto t2 = std::chrono::high_resolution_clock::now();
+			std::chrono::duration<double, std::micro> search_time = t2 - t1;
+			tot_time += search_time;
+		}
+	}
+	else if (search_method == "prim") {
+		std::random_device rd;
+		std::mt19937 rng(rd());
+		std::uniform_int_distribution<int> uni(0, 999999);
+		for (int i=0; i < searches; i++) {
+			auto random_integer = uni(rng);
+			float key = static_cast<float>(random_integer);
+			auto t1 = std::chrono::high_resolution_clock::now();
+			tree.Search(key);
+			auto t2 = std::chrono::high_resolution_clock::now();
+			std::chrono::duration<double, std::micro> search_time = t2 - t1;
+			tot_time += search_time;
+		}
 	}
 	double ops = searches/(tot_time.count()/1000000);
 	double k_ops = ops/1000;
